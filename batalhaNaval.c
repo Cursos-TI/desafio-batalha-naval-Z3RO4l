@@ -1,44 +1,53 @@
 #include <stdio.h>
-
-#define proporcao 10 
-#define navios 3
-
+#define TAM 10
+#define TAM_HAB 5
 
 int main() {
+    int tabuleiro[TAM][TAM] = {0};
 
-    int TABULEIRO [proporcao][navios];
+    // Triângulo (pirâmide) de navios (valor 3)
+    tabuleiro[1][2] = 3;
+    tabuleiro[2][1] = tabuleiro[2][2] = tabuleiro[2][3] = 3;
+    tabuleiro[3][0] = tabuleiro[3][1] = tabuleiro[3][2] = tabuleiro[3][3] = tabuleiro[3][4] = 3;
 
-    for (int i = 0; i < proporcao; i++){
-        for (int j = 0; j < proporcao; j++){
-            TABULEIRO[i][j] = 0;
+    // Cruz (formato +), deslocada para não confundir
+    int meio = TAM_HAB / 2;
+    int centro_cruz_linha = 1;
+    int centro_cruz_coluna = 7;
+    for (int i = 0; i < TAM_HAB; i++) {
+        int lin = centro_cruz_linha - meio + i;
+        int col = centro_cruz_coluna;
+        if (lin >= 0 && lin < TAM) {
+            tabuleiro[lin][col] = 3;
         }
-        
-    }//navio 1 na horizontal//
-    for (int j = 1; j < 4; j++){
-        TABULEIRO[2][j] = navios;
-
-    }//NAVIO 2 VERTICAL//
-         for (int i = 4; i < 5; i++){
-            TABULEIRO[i][6] = navios;
-
-    }//NAVIO 3 DIAGONAL PRINCIPAL//
-             for (int i = 0; i < 9 ; i++){
-                 TABULEIRO[i][i] = navios;
-                 
-    }//NAVIO 4 DIAGONAL SECUNDARIA//
-                     for (int i = 0; i < 3; i++){
-                         TABULEIRO[i][9 - 1] = navios;
+        lin = centro_cruz_linha;
+        col = centro_cruz_coluna - meio + i;
+        if (col >= 0 && col < TAM) {
+            tabuleiro[lin][col] = 3;
+        }
     }
-    
-   printf("TABULEIRO DE BATALHA NAVAL\n");
-  
-      printf("   A B C D E F G H I J\n");
 
-    for (int i = 0; i < proporcao; i++) {
-          printf("%d ", i + 1);  
-        if (i + 1 < 10) printf(" ");  
-         for (int j = 0; j < proporcao; j++) {
-            printf("%d ", TABULEIRO[i][j]);
+    // Octaedro (losango), deslocado para parte inferior
+    int centro_octa_linha = 7;
+    int centro_octa_coluna = 7;
+    for (int i = 0; i < TAM_HAB; i++) {
+        for (int j = 0; j < TAM_HAB; j++) {
+            if (abs(i - meio) + abs(j - meio) <= meio) {
+                int lin = centro_octa_linha - meio + i;
+                int col = centro_octa_coluna - meio + j;
+                if (lin >= 0 && lin < TAM && col >= 0 && col < TAM) {
+                    tabuleiro[lin][col] = 3;
+                }
+            }
+        }
+    }
+
+    // Exibir o tabuleiro
+    printf("\n   A B C D E F G H I J\n");
+    for (int i = 0; i < TAM; i++) {
+        printf("%2d ", i + 1);
+        for (int j = 0; j < TAM; j++) {
+            printf("%d ", tabuleiro[i][j]);
         }
         printf("\n");
     }
